@@ -1,31 +1,50 @@
-// backend/server.js
-const express = require('express');
-const mongoose = require('mongoose');
-require('dotenv').config();
-const cors = require('cors');
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import analyticsRoutes from './routes/analytics.js';
+import notificationRoutes from './routes/notifications.js';
 
-const authRoutes = require('./routes/auth.js');
-const listingRoutes = require('./routes/listings.js');
+// Import routes
+import authRoutes from './routes/auth.js';
+import productRoutes from './routes/products.js';
+import orderRoutes from './routes/orders.js'
+
+dotenv.config();
 
 const app = express();
+
+// Middleware
 app.use(cors());
 app.use(express.json());
 
-const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/agrismart_dev';
-
-mongoose.connect(MONGO_URI)
-  .then(()=> console.log('MongoDB connected'))
-  .catch(err=> console.error('MongoDB error', err));
-
+// Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/listings', listingRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/analytics', analyticsRoutes);
+app.use('/api/notifications', notificationRoutes);
 
-app.get('/api/health', (req,res)=> res.json({ ok: true, time: new Date() }));
-
-app.use((err, req, res, next)=>{
-  console.error(err.stack);
-  res.status(500).json({ error: 'internal server error!'});
+// Simple test route
+app.get('/', (req, res) => {
+  res.json({ message: 'AgriSmart API is working!' });
 });
 
-app.listen(PORT, ()=> console.log(`Server listening on port ${PORT}`));
+// Connect to MongoDB
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/agrismart');
+    console.log('✅ MongoDB Connected');
+  } catch (error) {
+    console.log('❌ MongoDB Connection Error:', error.message);
+  }
+};
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  connectDB();
+  console.log(`🚀 Server running on port ${PORT}`);
+});
+
+export default app;

@@ -1,16 +1,33 @@
-const jwt = require('jsonwebtoken');
-require('dotenv').config();
+import jwt from 'jsonwebtoken';
+import User from '../models/User.js';
 
-module.exports = function(req, res, next) {
-  const authHeader = req.headers.authorization || req.headers.Authorization;
-  if (!authHeader?.startsWith('Bearer')) return res.status(401).json({ message: 'Missing token' });
-
-  const token = authHeader.split(' ')[1];
+const auth = async (req, res, next) => {
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = { id: decoded.id, role: decoded.role };
-    next();
-    } catch (err) {
-    return res.status(403).json({ message: 'Invalid token' });
+    const token = req.header('Authorization')?.replace('Bearer ', '');
+    
+    if (!token) {
+      return res.status(401).json({ message: 'No token, authorization denied' });
     }
-  };
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'agrismart-secret');
+    const user = await User.findById(decoded.userId).select('-password');
+    
+    if (!user) {
+      return res.status(401).json({ message: 'Token is not valid' });
+    }
+
+    req.user = {
+      userId: user._id,
+      role: user.role,
+      email: user.email
+    };
+    
+    next();
+  } catch (error) {
+    res.status(401).json({ message: 'Token is not valid' });
+  }
+};
+
+export default auth;
+
+
