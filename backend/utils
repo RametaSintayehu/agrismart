@@ -1,0 +1,7 @@
+// Connection state constants for AgriSmart
+module.exports = {
+    DISCONNECTED: 0,
+    CONNECTED: 1,
+    CONNECTING: 2,
+    DISCONNECTING: 3
+};
