@@ -1,5 +1,7 @@
 {
   "name": "agrismart-frontend",
+  "version": "1.0.0",
+  "description": "AgriSmart Farming Solution Frontend",
   "type": "module",
   "scripts": {
     "dev": "vite",

@@ -1,0 +1,32 @@
+/* AgriSmart Main Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #2d5016 0%, #4a7c1f 100%);
+  min-height: 100vh;
+  color: #333;
+  line-height: 1.6;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* AgriSmart Color Theme */
+:root {
+  --agri-green: #2d5016;
+  --agri-light-green: #4a7c1f;
+  --agri-yellow: #d4af37;
+  --agri-brown: #8b4513;
+  --agri-cream: #f5f5dc;
+}
+
+/* Utility Classes */
+.text-agri-green { color: var(--agri-green); }
+.bg-agri-green { background-color: var(--agri-green); }
+.bg-agri-light { background-color: var(--agri-light-green); }
