@@ -1,13 +1,11 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+import axios from 'axios';
+const api = import.meta.env.VITE_API_URL;
 
-const api = axios.create({
-  baseURL: API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+export const getUsers= () => {
+   return axios.get(`${api}/api/users`); 
+};
 
 // Add token to requests
 api.interceptors.request.use((config) => {
